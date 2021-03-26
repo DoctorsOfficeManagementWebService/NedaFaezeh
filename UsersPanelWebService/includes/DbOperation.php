@@ -13,8 +13,73 @@ class DbOperation
 	}
 
 	///////////////////////////////////////////////////////////////////////
-	
-	function showInformationUser($mobile,$usercode){
+	function getWishlist($client_code){
+		
+		$connect2 = new DbConnect;
+		$sql_1="SELECT * FROM wishlist WHERE `client_code`='".$client_code."' ORDER BY `id` DESC ";
+		$result_1 = $connect2->query($sql_1);
+		$comments=array();
+		while($row1=mysqli_fetch_assoc($result_1)){
+
+			$comment=array();
+			$comment['id']=$row1['id'];
+			$comment['client_code']=$row1['client_code'];
+			$comment['doctor_code']=$row1['doctor_code'];
+			$comment['date_time_submit']=$row1['date_time_submit'];
+			array_push($comments,$comment);
+		}
+		//------------------------------------------------------------
+		return $comments;
+	}
+
+	///////////////////////////////////////////////////////////////////////
+	function getCommentsDoctor($doctor_code){
+		
+		$connect2 = new DbConnect;
+		$sql_1="SELECT * FROM comment WHERE `doctor_code`='".$doctor_code."' ORDER BY `id` DESC ";
+		$result_1 = $connect2->query($sql_1);
+		$comments=array();
+		while($row1=mysqli_fetch_assoc($result_1)){
+
+			$comment=array();
+			$comment['id']=$row1['id'];
+			$comment['client_code']=$row1['client_code'];
+			$comment['doctor_code']=$row1['doctor_code'];
+			$comment['title']=$row1['title'];
+			$comment['caption']=$row1['caption'];
+			$comment['situation']=$row1['situation'];
+			$comment['date_time_submit']=$row1['date_time_submit'];
+			array_push($comments,$comment);
+		}
+		//------------------------------------------------------------
+		return $comments;
+	}
+
+	///////////////////////////////////////////////////////////////////////
+	function getCommentsClient($client_code){
+		
+		$connect2 = new DbConnect;
+		$sql_1="SELECT * FROM comment WHERE `client_code`='".$client_code."' ORDER BY `id` DESC ";
+		$result_1 = $connect2->query($sql_1);
+		$comments=array();
+		while($row1=mysqli_fetch_assoc($result_1)){
+
+			$comment=array();
+			$comment['id']=$row1['id'];
+			$comment['client_code']=$row1['client_code'];
+			$comment['doctor_code']=$row1['doctor_code'];
+			$comment['title']=$row1['title'];
+			$comment['caption']=$row1['caption'];
+			$comment['situation']=$row1['situation'];
+			$comment['date_time_submit']=$row1['date_time_submit'];
+			array_push($comments,$comment);
+		}
+		//------------------------------------------------------------
+		return $comments;
+	}
+///////////////////////////////////////////////////////////////////////	
+
+	function addToWishlist($client_code,$doctor_code){
 		
 		$connect2 = new DbConnect;
 		//-----------------------
@@ -23,38 +88,31 @@ class DbOperation
 		$date_miladi= date("Y-m-d");
 		$date_time_miladi = $date_miladi.' '.$time_up;
 		//-----------------------
-		$sql_1="SELECT * FROM `users` WHERE `mobile`='".$mobile."' AND  `agent_code`='".$usercode."' ";
-		$result_1 = $connect2->query($sql_1);
-		$row1=mysqli_fetch_array($result_1);
-		$flag1=false;
-		$verifies=array();
-		if(!empty($row1['id'])){
-			$verify=array();
-			$sql_12="SELECT * FROM `users` WHERE `id`='".$row1['id_user']."'  ";
-			$result_12 = $connect2->query($sql_12);
-			$row12=mysqli_fetch_array($result_12);
-			$sql_123="SELECT COUNT(`id`) FROM `users` WHERE `id_agent_code`='".$row1['id_user']."'  ";
-			$result_123 = $connect2->query($sql_123);
-			$row123=mysqli_fetch_array($result_123);
-			$sql_1234="SELECT * FROM `users` WHERE `id`='".$row12['id_agent_code']."'  ";
-			$result_1234 = $connect2->query($sql_1234);
-			$row1234=mysqli_fetch_array($result_1234);
-			$verify['mobile_number']=$mobile;
-			$verify['user_code']=$row12['agent_code'];
-			$verify['agent_code']=$row1234['agent_code'];
-			$verify['level']=$row12['level'];
-			$verify['fname']=$row12['fname'];
-			$verify['lname']=$row12['lname'];
-			$verify['type_user']=$row12['type_user'];  //gold or silver
-			$verify['count_subset']=$row123[0];
-			array_push($verifies,$verify);
-			$flag1=true;
-			
-		}
-		if($flag1==false)
-			return $flag1;
-		else
-			return $verifies;		
+		$sql="INSERT INTO `wishlist`(`client_code`, `doctor_code`, `date_time_submit`) VALUES 
+			('".$client_code."' ,'".$doctor_code."' ,'".$date_time_miladi."') ";		
+		$result = $connect2->query($sql);
+		if($result)
+			return true;			
+		return false;		
+	}		
+
+	///////////////////////////////////////////////////////////////////////
+	
+	function commentToDoctor($client_code,$doctor_code,$title,$caption){
+		
+		$connect2 = new DbConnect;
+		//-----------------------
+		$date_up = jdate("Y-m-d",'','','','en');
+		$time_up = jdate('H-i-s','','','','en');
+		$date_miladi= date("Y-m-d");
+		$date_time_miladi = $date_miladi.' '.$time_up;
+		//-----------------------
+		$sql="INSERT INTO `comment`( `client_code`, `doctor_code`, `title`, `caption`, `situation`, `date_time_submit`) VALUES 
+			('".$client_code."' ,'".$doctor_code."' ,'".$title."' ,'".$caption."', 0 ,'".$date_time_miladi."') ";		
+		$result = $connect2->query($sql);
+		if($result)
+			return true;			
+		return false;		
 	}			
 	///////////////////////////////////////////////////////////////////////
 
