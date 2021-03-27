@@ -36,7 +36,7 @@ if(isset($_GET['apicall'])){
 			$_POST['client_code'],$_POST['doctor_code'],$_POST['title'],$_POST['caption']);
 			if($result){
 				$response['status']=200;
-				$response['data']=$db->getEmployees();
+				$response['data']=$db->getCommentsClient($_POST['client_code']);
 			}
 			else
 			{
