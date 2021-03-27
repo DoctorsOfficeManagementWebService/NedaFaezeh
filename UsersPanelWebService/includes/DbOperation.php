@@ -5,7 +5,8 @@ class DbOperation
 	function __construct()
 	{
 		require_once('DbConnect.php');
-		/*require_once('../tools/object/random-generate-num.php') ;
+		/*include_once('header.php');
+		require_once('../tools/object/random-generate-num.php') ;
 		require_once("../tools/object/jdf2.php") ;
 		include_once("../tools/Classes/VerificationCode.php");*/
 		$db=new DbConnect();
