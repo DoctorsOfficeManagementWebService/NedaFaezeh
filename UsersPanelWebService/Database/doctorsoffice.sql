@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Mar 26, 2021 at 04:31 PM
+-- Generation Time: Mar 29, 2021 at 06:37 PM
 -- Server version: 10.4.17-MariaDB
 -- PHP Version: 7.4.16
 
@@ -24,6 +24,27 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `clients`
+--
+
+CREATE TABLE `clients` (
+  `id` bigint(255) NOT NULL,
+  `code` bigint(255) NOT NULL,
+  `fname` varchar(500) NOT NULL,
+  `lname` varchar(500) NOT NULL,
+  `tell` varchar(500) NOT NULL,
+  `email` varchar(500) NOT NULL,
+  `state` varchar(500) NOT NULL,
+  `city` varchar(500) NOT NULL,
+  `address` text NOT NULL,
+  `national` bigint(255) NOT NULL,
+  `image` varchar(500) NOT NULL,
+  `date_time_register` datetime NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `comment`
 --
 
@@ -37,28 +58,15 @@ CREATE TABLE `comment` (
   `date_time_submit` datetime NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
 
--- --------------------------------------------------------
-
 --
--- Table structure for table `users`
+-- Dumping data for table `comment`
 --
 
-CREATE TABLE `users` (
-  `id` bigint(255) NOT NULL,
-  `code` bigint(255) NOT NULL,
-  `username` varchar(500) NOT NULL,
-  `password` varchar(500) NOT NULL,
-  `fname` varchar(500) NOT NULL,
-  `lname` varchar(500) NOT NULL,
-  `tell` varchar(500) NOT NULL,
-  `email` varchar(500) NOT NULL,
-  `state` varchar(500) NOT NULL,
-  `city` varchar(500) NOT NULL,
-  `address` text NOT NULL,
-  `national` bigint(255) NOT NULL,
-  `image` varchar(500) NOT NULL,
-  `date_time_register` datetime NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
+INSERT INTO `comment` (`id`, `client_code`, `doctor_code`, `title`, `caption`, `situation`, `date_time_submit`) VALUES
+(1, 1, 11, 'Good', 'Good Thanks!', 0, '2021-03-27 13:26:52'),
+(2, 1, 12, 'Good', 'Good Thanks!', 0, '2021-03-27 13:42:36'),
+(3, 1, 12, 'Good', 'Good Thanks!', 0, '2021-03-27 13:49:11'),
+(4, 1, 12, 'Good', 'Good Thanks!', 0, '2021-03-27 13:57:00');
 
 -- --------------------------------------------------------
 
@@ -91,19 +99,26 @@ CREATE TABLE `wishlist` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
 
 --
+-- Dumping data for table `wishlist`
+--
+
+INSERT INTO `wishlist` (`id`, `client_code`, `doctor_code`, `date_time_submit`) VALUES
+(1, 1, 12, '2021-03-28 11:12:17');
+
+--
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `clients`
+--
+ALTER TABLE `clients`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `comment`
 --
 ALTER TABLE `comment`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `users`
---
-ALTER TABLE `users`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -123,16 +138,16 @@ ALTER TABLE `wishlist`
 --
 
 --
--- AUTO_INCREMENT for table `comment`
+-- AUTO_INCREMENT for table `clients`
 --
-ALTER TABLE `comment`
+ALTER TABLE `clients`
   MODIFY `id` bigint(255) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `users`
+-- AUTO_INCREMENT for table `comment`
 --
-ALTER TABLE `users`
-  MODIFY `id` bigint(255) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `comment`
+  MODIFY `id` bigint(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `visit`
@@ -144,7 +159,7 @@ ALTER TABLE `visit`
 -- AUTO_INCREMENT for table `wishlist`
 --
 ALTER TABLE `wishlist`
-  MODIFY `id` bigint(255) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
