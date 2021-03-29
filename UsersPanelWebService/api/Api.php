@@ -15,7 +15,7 @@ function isTheseParameterAvailable($params){
 	if(!$available){
 		$response=array();
 		$response['status']=404;
-		$response['data']= array('error' => 'Parameters '.$missingParams.' missing');	;
+		$response['data']= array('error' => 'Parameters '.$missingParams.' missing');
 		//echo json_encode($response);
 		deliver_response($response);
 		die();
@@ -26,8 +26,95 @@ $response=array();
 if(isset($_GET['apicall'])){
 	switch($_GET['apicall']){
 		////////////////////////
+		////////////////////////
+		case 'updateuserinfo':
+			isTheseParameterAvailable(
+			array('client_code','fname','lname','tell','email','state','city','address','national'));
+			$db=new DbOperation();
+			$result=$db->updateUserInfo(
+			$_POST['client_code'],$_POST['fname'],$_POST['lname'],$_POST['tell'],$_POST['email'],$_POST['state'],$_POST['city'],$_POST['address'],$_POST['national']);
+			if($result){
+				$response['status']=200;
+				$response['data']=$db->getWishlist($_POST['client_code']);
+			}
+			else
+			{
+				$response['status']=400;
+				$response['data']=[];
+			}
+		break;
 		////////////////////////////
-
+		case 'getwishlist':
+			if(isset($_GET['client_code'])){
+				$db=new DbOperation();
+				$output=$db->getWishlist($_GET['client_code']);
+				if($output){
+					$response['status']=200;
+					$response['data']=$output;
+				}
+				else{
+					$response['status']=400;
+					$response['data']=array('error' => 'There is no data.');
+				}
+			}else{
+				$response['status']=400;
+				$response['data']=array('error' => 'Please enter client code.');
+			}
+		break;
+		////////////////////////////
+		case 'getcommentsdoctor':
+			if(isset($_GET['doctor_code'])){
+				$db=new DbOperation();
+				$output=$db->getCommentsDoctor($_GET['doctor_code']);
+				if($output){
+					$response['status']=200;
+					$response['data']=$output;
+				}
+				else{
+					$response['status']=400;
+					$response['data']=array('error' => 'There is no data.');
+				}
+			}else{
+				$response['status']=400;
+				$response['data']=array('error' => 'Please enter doctor code.');
+			}
+		break;
+		////////////////////////////
+		case 'getcommentsclient':
+			if(isset($_GET['client_code'])){
+				$db=new DbOperation();
+				$output=$db->getCommentsClient($_GET['client_code']);
+				if($output){
+					$response['status']=200;
+					$response['data']=$output;
+				}
+				else{
+					$response['status']=400;
+					$response['data']=array('error' => 'There is no data.');
+				}
+			}else{
+				$response['status']=400;
+				$response['data']=array('error' => 'Please enter doctor code.');
+			}
+		break;
+		////////////////////////
+		case 'addtowishlist':
+			isTheseParameterAvailable(
+			array('client_code','doctor_code'));
+			$db=new DbOperation();
+			$result=$db->addToWishlist(
+			$_POST['client_code'],$_POST['doctor_code']);
+			if($result){
+				$response['status']=200;
+				$response['data']=$db->getWishlist($_POST['client_code']);
+			}
+			else
+			{
+				$response['status']=400;
+				$response['data']=[];
+			}
+		break;
+		////////////////////////
 		case 'commenttodoctor':
 			isTheseParameterAvailable(
 			array('client_code','doctor_code','title','caption'));
