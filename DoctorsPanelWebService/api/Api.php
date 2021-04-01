@@ -26,13 +26,13 @@ $response=array();
 if(isset($_GET['apicall'])){
 	switch($_GET['apicall']){
 		////////////////////////
-		case 'searchDoctor':
-			if(isset($_GET['doctor_name']) && isset($_GET['medical_sys_num'])){
+		case 'checkworkflow':
+			if(isset($_GET['doctor_code'])){
 				$db=new DbOperation();
-				$output=$db->searchDoctor($_GET['doctor_name'] && $_GET['medical_sys_num'] );
+				$output=$db->checkWorkflow($_GET['doctor_code'],$_GET['day_of_week'],$_GET['time']);
 				if($output){
 					$response['status']=200;
-					$response['data']=$output;
+					$response['data']=array('ok' => 'There is data.');
 				}
 				else{
 					$response['status']=400;
@@ -40,14 +40,31 @@ if(isset($_GET['apicall'])){
 				}
 			}else{
 				$response['status']=400;
-				$response['data']=array('error' => 'Please enter doctor name and medical system number');
+				$response['data']=array('error' => 'Please enter doctor code.');
 			}
 		break;
 		////////////////////////
-		case 'searchListDoctors':
-			if(isset($_GET['city']) && isset($_GET['proficiency']) && isset($_GET['education'])){
+		case 'setworkflow':
+			isTheseParameterAvailable(
+			array('doctor_code','day_of_week','situ','time_of','time_to','slot_time'));
+			$db=new DbOperation();
+			$result=$db->setWorkflow(
+			$_POST['doctor_code'],$_POST['day_of_week'],$_POST['situ'],$_POST['time_of'],$_POST['time_to'],$_POST['slot_time']);
+			if($result){
+				$response['status']=200;
+				$response['data']=$db->getWorkflow($_POST['doctor_code']);
+			}
+			else
+			{
+				$response['status']=400;
+				$response['data']=array('error' => 'This visit time has already been booked.');
+			}
+		break;
+		////////////////////////
+		case 'getworkflow':
+			if(isset($_GET['doctor_code'])){
 				$db=new DbOperation();
-				$output=$db->searchListDoctors($_GET['city'] && $_GET['proficiency'] && $_GET['education']);
+				$output=$db->getWorkflow($_GET['doctor_code']);
 				if($output){
 					$response['status']=200;
 					$response['data']=$output;
@@ -58,7 +75,43 @@ if(isset($_GET['apicall'])){
 				}
 			}else{
 				$response['status']=400;
-				$response['data']=array('error' => 'Please enter city,proficiency,education.');
+				$response['data']=array('error' => 'Please enter doctor code.');
+			}
+		break;
+		////////////////////////
+		case 'getlistdoctors':
+			if(isset($_GET['city']) || isset($_GET['proficiency']) || isset($_GET['education'])){
+				$db=new DbOperation();
+				$output=$db->getListDoctors($_GET['city'],$_GET['proficiency'],$_GET['education']);
+				if($output){
+					$response['status']=200;
+					$response['data']=$output;
+				}
+				else{
+					$response['status']=400;
+					$response['data']=array('error' => 'There is no data.');
+				}
+			}else{
+				$response['status']=400;
+				$response['data']=array('error' => 'Please enter client code.');
+			}
+		break;
+		////////////////////////////
+		case 'getdoctor':
+			if(isset($_GET['doctor_name']) || isset($_GET['medical_sys_num'])){
+				$db=new DbOperation();
+				$output=$db->getDoctor($_GET['doctor_name'],$_GET['medical_sys_num']);
+				if($output){
+					$response['status']=200;
+					$response['data']=$output;
+				}
+				else{
+					$response['status']=400;
+					$response['data']=array('error' => 'There is no data.');
+				}
+			}else{
+				$response['status']=400;
+				$response['data']=array('error' => 'Please enter client code.');
 			}
 		break;
 		////////////////////////
@@ -123,7 +176,7 @@ function deliver_response($response){
 	// Set HTTP Response Content Type
 	header('Content-Type: application/json; charset=utf-8');
 	// Format data into a JSON response
-	$json_response = json_encode($response['data']);
+	$json_response = json_encode($response);
 	// Deliver formatted data
 	echo $json_response;
 
