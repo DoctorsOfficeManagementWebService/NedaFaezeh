@@ -26,6 +26,65 @@ $response=array();
 if(isset($_GET['apicall'])){
 	switch($_GET['apicall']){
 		////////////////////////
+		case 'visitreserve':
+			isTheseParameterAvailable(
+			array('client_code','doctor_code','date_visit','time_visit_of','time_visit_to'));
+			$db=new DbOperation();
+			$result=$db->visitReserve(
+			$_POST['client_code'],$_POST['doctor_code'],$_POST['date_visit'],$_POST['time_visit_of'],$_POST['time_visit_to']);
+			if($result==1001){
+				$response['status']=200;
+				$response['data']=array('message' => 'The time you requested was reserved.');
+			}
+			else if($result==1002){
+				$response['status']=400;
+				$response['data']=array('error' => 'Sorry, Error in database,try again.');
+			}
+			else if($result==1003){
+				$response['status']=400;
+				$response['data']=array('error' => 'Sorry, This visit time has already been booked.');
+			}
+			else if($result==1004){
+				$response['status']=400;
+				$response['data']=array('error' => 'Sorry, The doctor does not have time to visit at this time.');
+			}
+		break;
+		////////////////////////
+		case 'searchlistdoctors':
+			if(isset($_GET['city']) || isset($_GET['proficiency']) || isset($_GET['education'])){
+				$db=new DbOperation();
+				$output=$db->searchListDoctors($_GET['city'],$_GET['proficiency'],$_GET['education']);
+				if($output){
+					$response['status']=200;
+					$response['data']=$output;
+				}
+				else{
+					$response['status']=400;
+					$response['data']=array('error' => 'There is no data.');
+				}
+			}else{
+				$response['status']=400;
+				$response['data']=array('error' => 'Please enter one of parameters (city,proficiency,education).');
+			}
+		break;
+		////////////////////////////
+		case 'searchdoctor':
+			if(isset($_GET['doctor_name']) || isset($_GET['medical_sys_num'])){
+				$db=new DbOperation();
+				$output=$db->searchDoctor($_GET['doctor_name'],$_GET['medical_sys_num']);
+				if($output){
+					$response['status']=200;
+					$response['data']=$output;
+				}
+				else{
+					$response['status']=400;
+					$response['data']=array('error' => 'There is no data.');
+				}
+			}else{
+				$response['status']=400;
+				$response['data']=array('error' => 'Please enter one of parameters (doctor_name,medical_sys_num).');
+			}
+		break;
 		////////////////////////
 		case 'updateuserinfo':
 			isTheseParameterAvailable(
@@ -40,7 +99,7 @@ if(isset($_GET['apicall'])){
 			else
 			{
 				$response['status']=400;
-				$response['data']=[];
+				$response['data']=array('error' => 'An error has occurred.');
 			}
 		break;
 		////////////////////////////
@@ -111,7 +170,7 @@ if(isset($_GET['apicall'])){
 			else
 			{
 				$response['status']=400;
-				$response['data']=[];
+				$response['data']=array('error' => 'An error has occurred.');
 			}
 		break;
 		////////////////////////
@@ -128,7 +187,7 @@ if(isset($_GET['apicall'])){
 			else
 			{
 				$response['status']=400;
-				$response['data']=[];
+				$response['data']=array('error' => 'An error has occurred.');
 			}
 		break;
 		////////////////////////
@@ -213,7 +272,7 @@ function deliver_response($response){
 	// Set HTTP Response Content Type
 	header('Content-Type: application/json; charset=utf-8');
 	// Format data into a JSON response
-	$json_response = json_encode($response['data']);
+	$json_response = json_encode($response);
 	// Deliver formatted data
 	echo $json_response;
 
