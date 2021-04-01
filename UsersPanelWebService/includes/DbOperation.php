@@ -14,10 +14,58 @@ class DbOperation
 	}
 
 	///////////////////////////////////////////////////////////////////////
+	
+	function visitReserve($client_code,$doctor_code,$date_visit,$time_visit_of,$time_visit_to){
+		
+		$connect2 = new DbConnect;
+		//-----------------------
+		$date_up = jdate("Y-m-d",'','','','en');
+		$time_up = jdate('H-i-s','','','','en');
+		$date_miladi= date("Y-m-d");
+		$date_time_miladi = $date_miladi.' '.$time_up;
+		//----------------------- Getting work_flow of doctor:
+		/*$records=array();
+		$output=$this->getApi('http://doctorsoffice.farahiin.ir/doctor/api/Api.php?apicall=getworkflow&doctor_code='.$doctor_code);		
+		foreach ($output as $out) {
+			$record=array();
+			$record['doctor_code']=$out->doctor_code;
+			$record['doctor_name']=$out->fname.' '.$out->lname;
+			$record['doctor_day_of_week']=$out->day_of_week;
+			$record['doctor_situ']=$out->situ;
+			$record['doctor_time_of']=$out->time_of;
+			$record['doctor_time_to']=$out->time_to;
+			$record['doctor_slot_time']=$out->slot_time;
+			array_push($records,$record);
+		}*/
+		$out_re=0;
+		$date = new DateTime();
+		$day_number=$date->format( 'N' )+2;
+		$output=$this->getApi('http://doctorsoffice.farahiin.ir/doctor/api/Api.php?apicall=checkworkflow&doctor_code='.$doctor_code.'&day_of_week='.$day_number.'&time='.$time_visit_of);
+		if($output->status == 200 ){
+			//--------------------------
+			$sqlup="select * from `visit` WHERE `doctor_code`='".$doctor_code."' AND `date_visit`='".$date_visit."' AND (`time_visit_of`<= '".$time_visit_of."' AND `time_visit_to` >= '".$time_visit_of."') ";
+			$qup=$connect2->query($sqlup);
+			$helpup=mysqli_fetch_array($qup);
+			if(empty($helpup['id'])){
+				$sql="INSERT INTO `visit`( `client_code`, `doctor_code`, `date_visit`, `time_visit_of`, `time_visit_to`, `situation`, `date_time_submit`) VALUES 
+				('".$client_code."' ,'".$doctor_code."' ,'".$date_visit."' ,'".$time_visit_of."', '".$time_visit_to."','0','".$date_time_miladi."') ";		
+				$result = $connect2->query($sql);
+				if($result)
+					$out_re=1001;			
+				$out_re=1002;
+			}else{							
+				$out_re=1003;
+			}
+		}else{
+			$out_re=1004;
+		}
+		return $out_re;		
+	}
+	///////////////////////////////////////////////////////////////////////
 	function searchListDoctors($city,$proficiency,$education){
 		
 		$records=array();
-		$output=$this->getApi('http://doctorsoffice.farahiin.ir/api/Api.php?apicall=getcommentsdoctor&doctor_code=11');
+		$output=$this->getApi('http://doctorsoffice.farahiin.ir/doctor/api/Api.php?apicall=getlistdoctors&city='.$city.'&proficiency='.$proficiency.'&education='.$education);
 		foreach ($output as $out) {
 			$record=array();
 			$record['doctor_code']=$out->code;
@@ -37,7 +85,7 @@ class DbOperation
 	function searchDoctor($doctor_name,$medical_sys_num){
 		
 		$records=array();
-		$output=$this->getApi('http://doctorsoffice.farahiin.ir/api/Api.php?apicall=getcommentsdoctor&doctor_code=11');
+		$output=$this->getApi('http://doctorsoffice.farahiin.ir/doctor/api/Api.php?apicall=getdoctor&doctor_name='.$doctor_name.'&medical_sys_num='.$medical_sys_num);
 		foreach ($output as $out) {
 			$record=array();
 			$record['doctor_code']=$out->code;
