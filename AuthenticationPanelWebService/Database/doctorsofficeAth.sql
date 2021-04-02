@@ -32,8 +32,8 @@ CREATE TABLE `users` (
   `code` bigint(255) NOT NULL,
   `username` varchar(500) NOT NULL,
   `password` varchar(500) NOT NULL,
-  `mediacl_sys_num` varchar(500) NOT NULL,
-  `mobile` varchar(500) NOT NULL,
+  `mediacl_sys_num` varchar(500) NULL,
+  `mobile` varchar(500) NULL,
   `role` int(10) NOT NULL,
   `date_time_register` datetime NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
