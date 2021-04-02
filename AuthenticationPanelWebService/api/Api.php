@@ -25,59 +25,63 @@ function isTheseParameterAvailable($params){
 $response=array();
 if(isset($_GET['apicall'])){
 	switch($_GET['apicall']){
-		//////////////////////////
-		case 'registerClient':
-			isTheseParameterAvailable(
-				array('code','role','username','password'));
-				$db=new DbOperation();
-				$output=$db->registerClient(
-				$_POST['code'],$_POST['role'],$_POST['username'],$_POST['password']);
-				if($output){
-					$response['status']=200;
-					$response['data']=$output;
-				}
-				else{
-					$response['status']=400;
-					$response['data']=array('error' => 'Please fill in the role, username and password.');
-				}
-		break;
-		//////////////////////////
-		case 'registerDoc':
-			isTheseParameterAvailable(
-				array('code','role','username','password','mediacl_sys_num','mobile'));
-				$db=new DbOperation();
-				$output=$db->registerDoc(
-				$_POST['code'],$_POST['role'],$_POST['username'],$_POST['password'],$_POST['mediacl_sys_num'],$_POST['mobile']);
-				if($output){
-					$response['status']=200;
-					$response['data']=$output;
-				}
-				else{
-					$response['status']=400;
-					$response['data']=array('error' => 'Please fill in all the blanks.');
-				}
-		break;
 		////////////////////////
-		case 'login':
-		if(isset($_GET['username']) && isset($_GET['password'])){
+		////////////////////////
+		case 'registerclient':
+			isTheseParameterAvailable(
+			array('role','username','password'));
 			$db=new DbOperation();
-			$output=$db->login($_GET['username'],$_GET['password']);
-			if($output){
-				$response['error']=false;
-				$response['message']='Welcome.';
-				$response['verify']=$output;
+			$result=$db->registerClient(
+			$_POST['role'],$_POST['username'],$_POST['password']);
+			if($result){
+				$response['status']=200;
+				$response['data']=array('Ok' => 'Registered.');
 			}
-			else{
-				$response['error']=true;
-				$response['message']='Username or Password is incorrect.';
+			else
+			{
+				$response['status']=400;
+				$response['data']=array('error' => 'Sorry, Username is exist.');
 			}
-		}else{
-			$response['error']=true;
-			$response['message']="Please enter your username and password ";
-		}
-		
+		break;
+		////////////////////////////
+	
+		////////////////////////////
+		case 'registerdoctor':
+			isTheseParameterAvailable(
+			array('role','username','password','mediacl_sys_num','mobile'));
+			$db=new DbOperation();
+			$result=$db->registerDoctor(
+			$_POST['code'],$_POST['username'],$_POST['password'],$_POST['mediacl_sys_num'],$_POST['mobile']);
+			if($result){
+				$response['status']=200;
+				$response['data']=array('Ok' => 'Registered.');
+			}
+			else
+			{
+				$response['status']=400;
+				$response['data']=array('error' => 'Not registered.');
+			}
+		break;
+		////////////////////////////
+		case 'login':
+			if(isset($_GET['username'])){
+				$db=new DbOperation();
+				$output=$db->login($_GET['username'],$_GET['password']);
+				if($output){
+					$response['status']=200;
+					$response['data']=array('Ok' => 'Wellcome.');
+				}
+				else{
+					$response['status']=400;
+					$response['data']=array('error' => 'The user not exist.');
+				}
+			}else{
+				$response['status']=400;
+				$response['data']=array('error' => 'Please enter doctor code.');
+			}
 		break;
 		////////////////////////
+	
 
 		
 	}//switch
