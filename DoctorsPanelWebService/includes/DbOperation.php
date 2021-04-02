@@ -17,7 +17,7 @@ class DbOperation
 	function checkWorkflow($doctor_code,$day_of_week,$time){
 		
 		$connect2 = new DbConnect;
-		$sql_1="SELECT * FROM work_flow WHERE `doctor_code`='".$doctor_code."' AND  `day_of_week`='".$day_of_week."' AND `situ`=1  AND  `time_of`>='".$time."' AND `time_of` < '".$time."'  ";
+		$sql_1="SELECT * FROM work_flow WHERE `doctor_code`='".$doctor_code."' AND  `day_of_week`='".$day_of_week."' AND `situ`=1  AND  `time_of`<='".$time."' AND `time_to` > '".$time."'  ";
 		$result_1 = $connect2->query($sql_1);
 		$row1=mysqli_fetch_array($result_1);
 		if(!empty($row1['id'])){
