@@ -14,7 +14,7 @@ class DbOperation
 	}
 
 	///////////////////////////////////////////////////////////////////////
-	function registerClient($code,$role,$username,$password){
+	function registerClient($role,$username,$password){
 
 		$connect2 = new DbConnect;
 		//-----------------------
@@ -23,17 +23,23 @@ class DbOperation
 		$date_miladi= date("Y-m-d");
 		$date_time_miladi = $date_miladi.' '.$time_up;
 		//-----------------------
-		if($this->isAlreadyExist()){
+		$query = "SELECT MAX(`code`) FROM `users`  ";
+		$stmt =$connect2->query($query);
+		$helpup=mysqli_fetch_array($stmt);
+		$code=$helpup[0]+1;
+		//------------------------------
+
+		if($this->isAlreadyExist($username)){
 			return false;
 		}
-		//-
 		else{
-		$sql="INSERT INTO `users`(`code`, `username`, `password` , `role` , `date_time_submit`) VALUES 
-			('".$code."' ,'".$username."' ,'".$password."'  , '".$role."' , '".$date_time_miladi."') ";		
-		$result = $connect2->query($sql);
-		if($result)
-			return true;			
-		return false;
+			$sql="INSERT INTO `users`(`code`, `username`, `password` , `role` , `date_time_register`) VALUES 
+				('".$code."' ,'".$username."' ,'".$password."'  , '".$role."' , '".$date_time_miladi."') ";		
+			$result = $connect2->query($sql);
+			if($result)
+				return true;	
+			else		
+				return false;
 		}
 
 
@@ -41,7 +47,7 @@ class DbOperation
 	}
 	
 	///////////////////////////////////////////////////////////////////////
-	function registerDoc($code,$role,$username,$password,$mediacl_sys_num,$mobile){
+	function registerDoctor($role,$username,$password,$mediacl_sys_num,$mobile){
 
 		$connect2 = new DbConnect;
 		//-----------------------
@@ -50,34 +56,36 @@ class DbOperation
 		$date_miladi= date("Y-m-d");
 		$date_time_miladi = $date_miladi.' '.$time_up;
 		//-----------------------
-		if($this->isAlreadyExist()){
+		$query = "SELECT MAX(`code`) FROM `users`  ";
+		$stmt =$connect2->query($query);
+		$helpup=mysqli_fetch_array($stmt);
+		$code=$helpup[0]+1;
+		//------------------------------
+
+		if($this->isAlreadyExist($username)){
 			return false;
 		}	
 		
 		else {
-		$sql="INSERT INTO `users`(`code`, `username`, `password` , `mediacl_sys_num` , `mobile` , `role` , `date_time_submit`) VALUES 
-			('".$code."' , '".$username."' ,'".$password."' , '".$mediacl_sys_num."' , '".$mobile."' , '".$role."' , '".$date_time_miladi."') ";		
-		$result = $connect2->query($sql);
-		if($result)
-			return true;			
-		return false;
+			$sql="INSERT INTO `users`(`code`, `username`, `password` , `mediacl_sys_num` , `mobile` , `role` , `date_time_register`) VALUES 
+				('".$code."' , '".$username."' ,'".$password."' , '".$mediacl_sys_num."' , '".$mobile."' , '".$role."' , '".$date_time_miladi."') ";		
+			$result = $connect2->query($sql);
+			if($result)
+				return true;
+			else			
+				return false;
 		}
 
 
 
 	}
 	//////////////////////////////////////////////////////////////////////////
-	function isAlreadyExist(){
-		$query = "SELECT *
-			FROM
-				" . $this->users . " 
-			WHERE
-				username='".$this->username."'";
-		// prepare query statement
-		$stmt = $this->connection->prepare($query);
-		// execute query
-		$stmt->execute();
-		if($stmt->rowCount() > 0){
+	function isAlreadyExist($username){
+		$connect2 = new DbConnect;
+		$query = "SELECT * FROM `users` WHERE username='".$username."'";
+		$stmt =$connect2->query($query);
+		$helpup=mysqli_fetch_array($stmt);
+		if(!empty($helpup['id'])){
 			return true;
 		}
 		else{
@@ -86,19 +94,18 @@ class DbOperation
 	}
 	
 	/////////////////////////////////////////////////////////////////////
-	function login($code){
-		// select all query
-		$query = "SELECT
-					`id`, `username`, `password`
-				FROM
-					" . $this->users . " 
-				WHERE
-					username='".$this->username."' AND password='".$this->password."'";
-		// prepare query statement
-		$stmt = $this->connection->prepare($query);
-		// execute query
-		$stmt->execute();
-		return $stmt;
+	function login($username,$password){
+		$connect2 = new DbConnect;
+		$query = "SELECT * FROM `users`  WHERE
+					username='".$username."' AND password='".$password."'";
+		$stmt =$connect2->query($query);
+		$helpup=mysqli_fetch_array($stmt);
+		if(!empty($helpup['id'])){
+			return true;
+		}
+		else{
+			return false;
+		}
 	}
 			
 	///////////////////////////////////////////////////////////////////////
