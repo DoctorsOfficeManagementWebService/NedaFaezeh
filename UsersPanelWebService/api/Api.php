@@ -191,25 +191,7 @@ if(isset($_GET['apicall'])){
 			}
 		break;
 		////////////////////////
-		case 'showinformationuser':
-		if(isset($_GET['mobile']) && isset($_GET['code'])){
-			$db=new DbOperation();
-			$output=$db->showInformationUser($_GET['mobile'],$_GET['code']);
-			if($output){
-				$response['error']=false;
-				$response['message']='کاربر گرامی، خوش آمدید.';
-				$response['verify']=$output;
-			}
-			else{
-				$response['error']=true;
-				$response['message']='کاربر گرامی، کد فعال سازی وارد شده صحیح نمی باشد.';
-			}
-		}else{
-			$response['error']=true;
-			$response['message']="کاربر گرامی، لطفا کد فعال سازی ارسال شده به موبایل خود را وارد کنید. ";
-		}
 		
-		break;
 		////////////////////////
 
 		
