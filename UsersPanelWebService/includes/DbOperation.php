@@ -38,7 +38,7 @@ class DbOperation
 			array_push($records,$record);
 		}*/
 		$out_re=0;
-		$date = new DateTime();
+		$date = new DateTime($date_visit);
 		$day_number=$date->format( 'N' )+2;
 		$output=$this->getApi('http://doctorsoffice.farahiin.ir/doctor/api/Api.php?apicall=checkworkflow&doctor_code='.$doctor_code.'&day_of_week='.$day_number.'&time='.$time_visit_of);
 		if($output->status == 200 ){
@@ -51,8 +51,9 @@ class DbOperation
 				('".$client_code."' ,'".$doctor_code."' ,'".$date_visit."' ,'".$time_visit_of."', '".$time_visit_to."','0','".$date_time_miladi."') ";		
 				$result = $connect2->query($sql);
 				if($result)
-					$out_re=1001;			
-				$out_re=1002;
+					$out_re=1001;	
+				else		
+					$out_re=1002;
 			}else{							
 				$out_re=1003;
 			}
@@ -66,7 +67,8 @@ class DbOperation
 		
 		$records=array();
 		$output=$this->getApi('http://doctorsoffice.farahiin.ir/doctor/api/Api.php?apicall=getlistdoctors&city='.$city.'&proficiency='.$proficiency.'&education='.$education);
-		foreach ($output as $out) {
+		//print_r($output->data);
+		foreach ($output->data as $out) {
 			$record=array();
 			$record['doctor_code']=$out->code;
 			$record['doctor_name']=$out->fname.' '.$out->lname;
@@ -86,7 +88,7 @@ class DbOperation
 		
 		$records=array();
 		$output=$this->getApi('http://doctorsoffice.farahiin.ir/doctor/api/Api.php?apicall=getdoctor&doctor_name='.$doctor_name.'&medical_sys_num='.$medical_sys_num);
-		foreach ($output as $out) {
+		foreach ($output->data as $out) {
 			$record=array();
 			$record['doctor_code']=$out->code;
 			$record['doctor_name']=$out->fname.' '.$out->lname;
