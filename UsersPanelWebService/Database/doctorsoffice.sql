@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Mar 29, 2021 at 06:37 PM
+-- Generation Time: Apr 02, 2021 at 12:06 PM
 -- Server version: 10.4.17-MariaDB
 -- PHP Version: 7.4.16
 
@@ -42,6 +42,13 @@ CREATE TABLE `clients` (
   `date_time_register` datetime NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `clients`
+--
+
+INSERT INTO `clients` (`id`, `code`, `fname`, `lname`, `tell`, `email`, `state`, `city`, `address`, `national`, `image`, `date_time_register`) VALUES
+(1, 1003, 'رضا', 'رحمانی', '0912', 'reza@yahoo.com', 'تهران', 'تهران', 'تهران خیابان...', 11122233344, '', '2021-04-02 12:04:01');
+
 -- --------------------------------------------------------
 
 --
@@ -63,10 +70,10 @@ CREATE TABLE `comment` (
 --
 
 INSERT INTO `comment` (`id`, `client_code`, `doctor_code`, `title`, `caption`, `situation`, `date_time_submit`) VALUES
-(1, 1, 11, 'Good', 'Good Thanks!', 0, '2021-03-27 13:26:52'),
-(2, 1, 12, 'Good', 'Good Thanks!', 0, '2021-03-27 13:42:36'),
-(3, 1, 12, 'Good', 'Good Thanks!', 0, '2021-03-27 13:49:11'),
-(4, 1, 12, 'Good', 'Good Thanks!', 0, '2021-03-27 13:57:00');
+(1, 1003, 1001, 'Good', 'Good Thanks!', 0, '2021-03-27 13:26:52'),
+(2, 1003, 1002, 'Good', 'Good Thanks!', 0, '2021-03-27 13:42:36'),
+(3, 1003, 1002, 'Good', 'Good Thanks!', 0, '2021-03-27 13:49:11'),
+(4, 1003, 1002, 'Good', 'Good Thanks!', 0, '2021-03-27 13:57:00');
 
 -- --------------------------------------------------------
 
@@ -84,6 +91,17 @@ CREATE TABLE `visit` (
   `situation` int(10) NOT NULL,
   `date_time_submit` datetime NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `visit`
+--
+
+INSERT INTO `visit` (`id`, `client_code`, `doctor_code`, `date_visit`, `time_visit_of`, `time_visit_to`, `situation`, `date_time_submit`) VALUES
+(1, 1003, 1002, '2021-05-22', '10:00:00', '11:00:00', 0, '2021-04-01 10:08:21'),
+(9, 1003, 1001, '2021-05-22', '11:10:00', '12:00:00', 0, '2021-04-01 11:47:12'),
+(8, 1003, 1002, '2021-05-22', '11:10:00', '12:00:00', 0, '2021-04-01 11:12:14'),
+(10, 1003, 1001, '2021-04-01', '17:10:00', '18:00:00', 0, '2021-04-02 10:59:46'),
+(11, 1003, 1001, '2021-04-01', '18:10:00', '19:00:00', 0, '2021-04-02 11:01:01');
 
 -- --------------------------------------------------------
 
@@ -103,7 +121,8 @@ CREATE TABLE `wishlist` (
 --
 
 INSERT INTO `wishlist` (`id`, `client_code`, `doctor_code`, `date_time_submit`) VALUES
-(1, 1, 12, '2021-03-28 11:12:17');
+(1, 1003, 1002, '2021-03-28 11:12:17'),
+(2, 1, 12, '2021-04-02 11:46:23');
 
 --
 -- Indexes for dumped tables
@@ -141,25 +160,25 @@ ALTER TABLE `wishlist`
 -- AUTO_INCREMENT for table `clients`
 --
 ALTER TABLE `clients`
-  MODIFY `id` bigint(255) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `comment`
 --
 ALTER TABLE `comment`
-  MODIFY `id` bigint(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `visit`
 --
 ALTER TABLE `visit`
-  MODIFY `id` bigint(255) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `wishlist`
 --
 ALTER TABLE `wishlist`
-  MODIFY `id` bigint(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
