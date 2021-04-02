@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Mar 29, 2021 at 06:38 PM
+-- Generation Time: Apr 02, 2021 at 12:06 PM
 -- Server version: 10.4.17-MariaDB
 -- PHP Version: 7.4.16
 
@@ -30,6 +30,7 @@ SET time_zone = "+00:00";
 CREATE TABLE `doctors` (
   `id` bigint(255) NOT NULL,
   `code` bigint(255) NOT NULL,
+  `medical_sys_num` varchar(500) NOT NULL,
   `fname` varchar(500) NOT NULL,
   `lname` varchar(500) NOT NULL,
   `tell` varchar(500) NOT NULL,
@@ -43,6 +44,14 @@ CREATE TABLE `doctors` (
   `image` varchar(500) NOT NULL,
   `date_time_register` datetime NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `doctors`
+--
+
+INSERT INTO `doctors` (`id`, `code`, `medical_sys_num`, `fname`, `lname`, `tell`, `email`, `state`, `city`, `address`, `national`, `proficiency`, `education`, `image`, `date_time_register`) VALUES
+(1, 1001, '12345', 'علی', 'معصومی', '09122222222', 'ali@yahoo.com', 'تهران', 'تهران', 'تهران، خیابان پاسداران', 0, 'چشم پزشک', 'تخصص', '', '0000-00-00 00:00:00'),
+(2, 1002, '12390', 'مریم', 'اقاجانی', '09122223333', 'maryam@yahoo.com', 'قزوین', 'قزوین', 'قزوین ، خیابان خیام', 0, 'پوست و زیبایی', 'فوق تخصص', '', '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -60,6 +69,19 @@ CREATE TABLE `work_flow` (
   `slot_time` int(100) NOT NULL,
   `date_time_submit` datetime NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `work_flow`
+--
+
+INSERT INTO `work_flow` (`id`, `doctor_code`, `day_of_week`, `situ`, `time_of`, `time_to`, `slot_time`, `date_time_submit`) VALUES
+(1, 1001, 1, 1, '16:00:00', '21:00:00', 40, '2021-04-01 10:57:34'),
+(2, 1001, 1, 1, '16:00:00', '21:00:00', 40, '2021-04-01 10:57:34'),
+(3, 1001, 1, 1, '16:00:00', '21:00:00', 40, '2021-04-01 10:57:34'),
+(4, 1001, 1, 1, '16:00:00', '21:00:00', 40, '2021-04-01 10:57:34'),
+(5, 1001, 1, 1, '16:00:00', '21:00:00', 40, '2021-04-01 10:57:34'),
+(6, 1001, 1, 1, '16:00:00', '21:00:00', 40, '2021-04-01 10:57:34'),
+(7, 1001, 1, 1, '16:00:00', '21:00:00', 40, '2021-04-01 10:57:34');
 
 --
 -- Indexes for dumped tables
@@ -85,13 +107,13 @@ ALTER TABLE `work_flow`
 -- AUTO_INCREMENT for table `doctors`
 --
 ALTER TABLE `doctors`
-  MODIFY `id` bigint(255) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `work_flow`
 --
 ALTER TABLE `work_flow`
-  MODIFY `id` bigint(255) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
