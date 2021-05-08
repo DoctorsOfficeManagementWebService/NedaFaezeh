@@ -1,0 +1,29 @@
+version: '3.8'
+services: 
+        authentication:
+                image: sajadkh/doctor_system_authentication:latest
+                container_name: authentication
+                ports:
+                        - 8000:8000
+                networks:
+                        - doctor-net
+        patient_panel:
+                image: sajadkh/doctor_system_patient_panel:latest
+                container_name: patient_panel
+                ports:
+                        - 8002:8002
+                networks:
+                        - doctor-net
+                depends_on:
+                        - authentication
+        doctor_panel:
+                image: sajadkh/doctor_system_doctor_panel:latest
+                container_name: doctor_panel
+                ports:
+                        - 8001:8001
+                networks:
+                        - doctor-net
+                depends_on:
+                        - authentication
+networks:
+        doctor-net:
